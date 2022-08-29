@@ -12,7 +12,6 @@ logger = logging.getLogger(__name__)
 @click.group()
 def cli():
     """Miniature container orchestrator"""
-    pass
 
 
 @click.command()
@@ -22,7 +21,7 @@ def down(file: str):
     config = manifest.read(file)
     for service in config.services.values():
         logger.info(f"Stopping {service.name}")
-        container.remove(service.name)
+        container.remove(service)
 
 
 @click.command()
@@ -31,8 +30,12 @@ def up(file: str):
     """Create containers"""
     config = manifest.read(file)
     for service in config.services.values():
+        if container.exists(service):
+            logger.info(f"{service.name} is already running")
+            continue
+
         logger.info(f"Starting {service.name}")
-        container.create(service.image, service.name)
+        container.create(service)
 
 
 cli.add_command(up)

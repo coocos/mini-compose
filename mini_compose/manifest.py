@@ -5,16 +5,9 @@ from pathlib import Path
 import yaml
 from pydantic import BaseModel
 
+from .entities import Service
+
 logger = logging.getLogger(__name__)
-
-
-class Service(BaseModel):
-    """Service to start"""
-
-    name: str
-    image: str
-
-    ports: list[str]
 
 
 class Config(BaseModel):
