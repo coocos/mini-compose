@@ -14,17 +14,19 @@ class Config(BaseModel):
     """Compose configuration"""
 
     services: dict[str, Service]
+    network: str
 
 
 def read(manifest_file: str) -> Config:
     """Reads configuration from manifest file"""
     with open(manifest_file) as f:
-        config_yaml = yaml.safe_load(f)
+        config = yaml.safe_load(f)
+
+    directory = Path(manifest_file).parent.name
 
     # Name containers after the directory if no name is given
-    for name, service in config_yaml.get("services", {}).items():
+    for name, service in config.get("services", {}).items():
         if "name" not in service:
-            directory = Path(manifest_file).parent.name
             service["name"] = f"{directory}-{name}"
 
-    return Config(**config_yaml)
+    return Config(network=f"{directory}-network", **config)

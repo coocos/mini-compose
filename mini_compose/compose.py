@@ -19,9 +19,14 @@ def cli():
 def down(file: str):
     """Tear down containers"""
     config = manifest.read(file)
+
     for service in config.services.values():
-        logger.info(f"Stopping {service.name}")
-        container.remove(service)
+        if container.exists(service):
+            logger.info(f"Stopping {service.name}")
+            container.remove(service)
+
+    if container.delete_network(config.network):
+        logger.info(f"Deleted network {config.network}")
 
 
 @click.command()
@@ -29,13 +34,17 @@ def down(file: str):
 def up(file: str):
     """Create containers"""
     config = manifest.read(file)
+
+    if container.create_network(config.network):
+        logger.info(f"Created network {config.network}")
+
     for service in config.services.values():
         if container.exists(service):
             logger.info(f"{service.name} is already running")
             continue
 
         logger.info(f"Starting {service.name}")
-        container.create(service)
+        container.create(service, config.network)
 
 
 cli.add_command(up)
