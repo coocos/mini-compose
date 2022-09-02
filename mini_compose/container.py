@@ -28,7 +28,12 @@ def create(service: Service, network: str):
         client.images.pull(service.image)
 
     client.containers.run(
-        service.image, name=service.name, network=network, stdout=False, detach=True
+        service.image,
+        name=service.name,
+        network=network,
+        ports=service.ports,
+        stdout=False,
+        detach=True,
     )
 
 
