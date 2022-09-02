@@ -6,6 +6,7 @@ class Service(BaseModel):
     """Service to start"""
 
     name: str
+    container: str
     image: str
 
     ports: dict[int, int]

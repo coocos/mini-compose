@@ -3,6 +3,7 @@ import logging
 
 import docker
 import docker.errors
+from docker.models.networks import Network
 
 from mini_compose.entities import Service
 
@@ -11,15 +12,15 @@ client = docker.client.from_env()
 
 
 def exists(service: Service) -> bool:
-    """Returns whether service exists"""
+    """Returns whether service container exists"""
     try:
-        _ = client.containers.get(service.name)
+        client.containers.get(service.container)
         return True
     except docker.errors.NotFound:
         return False
 
 
-def create(service: Service, network: str):
+def create(service: Service):
     """Creates a new service container"""
     try:
         _ = client.images.get(service.image)
@@ -29,8 +30,7 @@ def create(service: Service, network: str):
 
     client.containers.run(
         service.image,
-        name=service.name,
-        network=network,
+        name=service.container,
         ports=service.ports,
         stdout=False,
         detach=True,
@@ -39,21 +39,16 @@ def create(service: Service, network: str):
 
 def remove(service: Service):
     """Stops and removes a service container"""
-    container = client.containers.get(service.name)
+    container = client.containers.get(service.container)
     container.remove(force=True)
 
 
-def create_network(name: str) -> bool:
-    """
-    Creates a new network if it does not exist yet.
-    Returns a boolean indicating if the network was created
-    """
+def create_network(name: str) -> Network:
+    """Creates a new network if needed and returns it"""
     try:
-        _ = client.networks.get(name)
-        return False
+        return client.networks.get(name)
     except docker.errors.NotFound:
-        client.networks.create(name, "bridge")
-        return True
+        return client.networks.create(name, "bridge")
 
 
 def delete_network(name: str) -> bool:

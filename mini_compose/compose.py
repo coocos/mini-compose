@@ -35,8 +35,8 @@ def up(file: str):
     """Create containers"""
     config = manifest.read(file)
 
-    if container.create_network(config.network):
-        logger.info(f"Created network {config.network}")
+    network = container.create_network(config.network)
+    logger.info(f"Created network {config.network}")
 
     for service in config.services.values():
         if container.exists(service):
@@ -44,7 +44,8 @@ def up(file: str):
             continue
 
         logger.info(f"Starting {service.name}")
-        container.create(service, config.network)
+        container.create(service)
+        network.connect(service.container, aliases=[service.name])
 
 
 cli.add_command(up)
