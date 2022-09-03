@@ -1,6 +1,6 @@
 # mini-compose
 
-A tiny subset of [Docker Compose](https://docs.docker.com/compose/) built on top of [Docker SDK](https://docker-py.readthedocs.io/en/stable/index.html).
+A tiny [Docker Compose](https://docs.docker.com/compose/)'ish container orchestrator built on top of [Docker SDK](https://docker-py.readthedocs.io/en/stable/index.html).
 
 ## In a nutshell
 
@@ -8,10 +8,10 @@ Given a `mini-compose.yml` file like this:
 
 ```yaml
 services:
-  app:
-    image: app:latest
+  nginx:
+    image: nginx:latest
     environment:
-      - DB_ADDRESS
+      - API_GATEWAY
     ports:
       - 8000:80
 ```
@@ -19,10 +19,10 @@ services:
 Executing `mini-compose up` in the same directory as the file will:
 
 - create a new bridge network
-- start a container in the network running the image `app:latest`
-- make the container reachable using the network alias `app`
+- start a container in the network running the image `nginx:latest`
+- make the container reachable using the network alias `nginx`
 - map the container port 80 to host port 8000
-- pass the DB_ADDRESS environment variable from host to container
+- pass the API_GATEWAY environment variable from host to container
 
 ## Limitations
 

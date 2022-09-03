@@ -1,5 +1,6 @@
 """Container operations"""
 import logging
+import os
 
 import docker
 import docker.errors
@@ -31,6 +32,9 @@ def create(service: Service):
         service.image,
         name=service.container,
         ports=service.ports,
+        environment={
+            var: os.environ[var] for var in service.environment if var in os.environ
+        },
         stdout=False,
         detach=True,
     )

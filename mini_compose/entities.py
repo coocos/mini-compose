@@ -8,6 +8,7 @@ class Service(BaseModel):
     name: str
     container: str
     image: str
+    environment: list[str]
 
     ports: dict[int, int]
 
