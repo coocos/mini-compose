@@ -4,7 +4,7 @@ from pathlib import Path
 import yaml
 from pydantic import BaseModel
 
-from .entities import Service
+from mini_compose.entities import Service
 
 
 class Config(BaseModel):

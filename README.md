@@ -16,13 +16,22 @@ services:
       - 8000:80
 ```
 
-Executing `mini-compose up` in the same directory as the file will:
+Executing `poetry run mini-compose up` in the same directory as the file will:
 
 - create a new bridge network
 - start a container in the network running the image `nginx:latest`
 - make the container reachable using the network alias `nginx`
 - map the container port 80 to host port 8000
 - pass the API_GATEWAY environment variable from host to container
+
+## Installation
+
+Assuming you have [Poetry](https://python-poetry.org) installed:
+
+```
+poetry install
+poetry run mini-compose up
+```
 
 ## Limitations
 
