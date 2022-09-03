@@ -22,16 +22,26 @@ Executing `poetry run mini-compose up` in the same directory as the file will:
 - start a container in the network running the image `nginx:latest`
 - make the container reachable using the network alias `nginx`
 - map the container port 80 to host port 8000
-- pass the API_GATEWAY environment variable from host to container
+- pass the `API_GATEWAY` environment variable from host to container
 
-## Installation
+You can also tear down the stack using `poetry run mini-compose down`.
 
-Assuming you have [Poetry](https://python-poetry.org) installed:
+## Installation & usage
 
-```
+Using [Poetry](https://python-poetry.org):
+
+```shell
+# Install dependencies
 poetry install
+
+# Start stack
 poetry run mini-compose up
+
+# Tear down stack
+poetry run mini-compose down
 ```
+
+You can also use the `--file` flag to specify the YAML file to use if `mini-compose.yml` is not your thing.
 
 ## Limitations
 
