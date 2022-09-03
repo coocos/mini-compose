@@ -50,6 +50,3 @@ def up(file: str):
 
 cli.add_command(up)
 cli.add_command(down)
-
-if __name__ == "__main__":
-    cli()
