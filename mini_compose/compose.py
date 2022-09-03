@@ -3,7 +3,7 @@ import logging
 
 import click
 
-from mini_compose import container, manifest
+from mini_compose import container, manifest, network
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ def down(file: str):
             logger.info(f"Stopping {service.name}")
             container.remove(service)
 
-    if container.delete_network(config.network):
+    if network.delete(config.network):
         logger.info(f"Deleted network {config.network}")
 
 
@@ -35,7 +35,7 @@ def up(file: str):
     """Create containers"""
     config = manifest.read(file)
 
-    network = container.create_network(config.network)
+    stack_network = network.create(config.network)
     logger.info(f"Created network {config.network}")
 
     for service in config.services.values():
@@ -45,7 +45,7 @@ def up(file: str):
 
         logger.info(f"Starting {service.name}")
         container.create(service)
-        network.connect(service.container, aliases=[service.name])
+        stack_network.connect(service.container, aliases=[service.name])
 
 
 cli.add_command(up)
